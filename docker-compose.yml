@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx_service
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /usr/local/nginx/conf/my-blog/nginx.conf:/etc/nginx/nginx.conf
+      - /usr/local/nginx/html/my-blog:/usr/share/nginx/html
+      - /usr/local/nginx/logs/my-blog:/var/log/nginx
+    networks:
+      - my-blog_net
+    depends_on:
+      - my-blog
+
+  my-blog:
+    build: .
+    container_name: my-blog
+    ports:
+      - "3000:3000"
+    volumes:
+      - /usr/local/nginx/html/my-blog:/app
+    networks:
+      - my-blog_net
+
+networks:
+  my-blog_net:
+    name: my-blog 
